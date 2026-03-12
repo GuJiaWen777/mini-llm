@@ -1,0 +1,13 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+out/
+checkpoints/
+dataset/pretrain_hq.jsonl
+
+# Virtual environments
+.venv
