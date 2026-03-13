@@ -7,7 +7,7 @@ wheels/
 *.egg-info
 out/
 checkpoints/
-dataset/pretrain_hq.jsonl
+dataset/*.jsonl
 
 # Virtual environments
 .venv

@@ -15,7 +15,7 @@ from torch import optim  # 优化器
 from torch.nn.parallel import DistributedDataParallel  # 分布式数据并行
 from torch.utils.data import DataLoader, DistributedSampler  # 数据加载器
 
-from model.MiniLLM import MiniLLMModel,MiniLLMConfig
+from model.MiniLLM import MiniLLMModel, MiniLLMConfig
 from dataset.lm_dataset import PretrainDataset
 from trainer.trainer_utils import (  # 训练工具函数
     get_lr,
@@ -56,10 +56,10 @@ def train_epoch(epoch, loader, iters, start_step=0, wandb=None):
                 input_ids, labels=labels, attention_mask=attention_mask
             )  # ！修正：直接传入labels和attention_mask，由模型内部计算loss
 
-            # loss = (
-            #     res.loss + res.aux_loss
-            #     )
-            loss = res.loss 
+            loss = (
+                res.loss + res.aux_loss
+                )
+
             loss = loss / args.accumulation_steps
 
         scaler.scale(loss).backward()

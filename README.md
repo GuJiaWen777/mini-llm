@@ -46,7 +46,8 @@ uv pip install -r requirements.txt
 
 ```bash
 cd trainer
-uv run python trainer_pretrain.py
+uv run python trainer_pretrain.py --use_moe 1
+
 ```
 
 常用参数：
