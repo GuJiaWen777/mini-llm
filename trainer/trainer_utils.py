@@ -133,7 +133,7 @@ def init_model(
     device="cuda",
 ):
     from transformers import AutoTokenizer
-    from model.MiniLLM import MiniLLMForCausalLM
+    from model.model_MiniLLM import MiniLLMForCausalLM
     # 如果没有指定 tokenizer_path，使用项目根目录下的 model 文件夹
     if tokenizer_path is None:
         # 获取当前文件所在目录的父目录（项目根目录）

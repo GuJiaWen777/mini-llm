@@ -15,7 +15,7 @@ from torch import optim  # 优化器
 from torch.nn.parallel import DistributedDataParallel  # 分布式数据并行
 from torch.utils.data import DataLoader, DistributedSampler  # 数据加载器
 
-from model.MiniLLM import MiniLLMModel, MiniLLMConfig
+from model.model_MiniLLM import MiniLLMModel, MiniLLMConfig
 from dataset.lm_dataset import PretrainDataset
 from trainer.trainer_utils import (  # 训练工具函数
     get_lr,
@@ -133,7 +133,7 @@ def train_epoch(epoch, loader, iters, start_step=0, wandb=None):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="MiNiMind Pretraining")
+    parser = argparse.ArgumentParser(description="MiniLLM Pretraining")
 
     # ========== 基础训练参数 ==========
     parser.add_argument(
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--epochs", type=int, default=1, help="训练轮数（建议1轮zero或2-6轮充分训练）"
     )
-    parser.add_argument("--batch_size", type=int, default=32, help="batch size")
+    parser.add_argument("--batch_size", type=int, default=4, help="batch size")
     parser.add_argument("--learning_rate", type=float, default=5e-4, help="初始学习率")
 
     # ========== 硬件和性能参数 ==========
@@ -235,7 +235,7 @@ if __name__ == "__main__":
     """
     os.makedirs(args.save_dir, exist_ok=True)  # 确保保存目录存在
 
-    # 创建MiniMind模型配置
+    # 创建MiniLLM模型配置
     lm_config = MiniLLMConfig(
         hidden_size=args.hidden_size,
         num_hidden_layers=args.num_hidden_layers,
@@ -294,7 +294,7 @@ if __name__ == "__main__":
     # ========== 5. 定义模型、数据、优化器 ==========
     """
     📚 训练组件初始化：
-    - 模型: 根据配置创建MiniMind模型
+    - 模型: 根据配置创建MiniLLM模型
     - 数据集: 加载预训练数据
     - 采样器: 分布式训练的数据分配
     - 优化器: AdamW优化器

@@ -15,18 +15,6 @@
   - MoE（混合专家）架构
   - LoRA 微调支持
 
-- **训练特性**
-  - 分布式训练（DistributedDataParallel）
-  - 混合精度训练（bfloat16/float16）
-  - 断点续训
-  - 梯度累积与裁剪
-  - 实验跟踪（WandB/SwanLab）
-
-- **推理特性**
-  - 流式输出
-  - 多种采样策略（temperature、top_p）
-  - 对话模板支持
-
 ## 环境要求
 
 - Python >= 3.11
@@ -46,10 +34,18 @@ uv pip install -r requirements.txt
 
 ```bash
 cd trainer
-uv run python trainer_pretrain.py --use_moe 1
-
+uv run python train_pretrain.py 
+uv run python train_pretrain.py --use_moe 1
+uv run python train_sft.py
+uv run python train_lora.py
+uv run python train_ppo.py
+uv run python train_grpo.py
 ```
-
+数据集
+- pretrain_hq.jsonl
+- sft_mini_512.jsonl
+- lora_identiy.jsonl
+- rlaif-mini.jsonl
 常用参数：
 
 | 参数 | 默认值 | 说明 |
@@ -68,7 +64,7 @@ uv run python trainer_pretrain.py --use_moe 1
 ### 推理/对话
 
 ```bash
-python main.py
+python eval.py
 ```
 
 常用参数：
@@ -83,57 +79,6 @@ python main.py
 | `--temperature` | 0.85 | 生成温度 |
 | `--top_p` | 0.85 | nucleus 采样阈值 |
 | `--device` | cuda | 运行设备 |
-
-## 模型规格
-
-| 模型 | 参数量 | Hidden Size | Layers | Heads | KV Heads |
-|------|--------|-------------|--------|-------|-----------|
-| Small | ~26M | 512 | 8 | 8 | 2 |
-| Base | ~104M | 768 | 16 | 12 | 4 |
-| MoE | ~145M | 640 | 8 | 8 | 2 |
-
-## 项目结构
-
-```
-mini-llm/
-├── model/
-│   └── MiniLLM.py       # 模型定义 (配置、Attention、MLP、Layer、LM Head)
-├── trainer/
-│   ├── trainer_pretrain.py  # 预训练脚本
-│   └── trainer_utils.py     # 训练工具函数
-├── dataset/
-│   └── lm_dataset.py     # 数据集加载
-├── checkpoints/         # 训练检查点
-├── out/                 # 训练产出模型权重
-├── main.py              # 推理入口
-├── eval.py              # 评估脚本
-└── README.md
-```
-
-## 使用示例
-
-### 训练自定义数据
-
-```bash
-cd trainer
-python trainer_pretrain.py \
-    --data_path ../dataset/your_data.jsonl \
-    --epochs 3 \
-    --batch_size 32 \
-    --hidden_size 768 \
-    --num_hidden_layers 16 \
-    --save_weight your_model
-```
-
-### 加载自定义权重推理
-
-```bash
-python main.py \
-    --load_from model \
-    --save_dir out \
-    --weight your_model \
-    --hidden_size 768
-```
 
 ## License
 
