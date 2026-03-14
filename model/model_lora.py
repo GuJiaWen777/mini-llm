@@ -32,6 +32,9 @@ def load_lora(model, path):
     state_dict = torch.load(path, map_location=model.device)
     state_dict = {(k[7:] if k.startswith('module.') else k): v for k, v in state_dict.items()}
 
+    # print("model_keys:", model_keys)
+    # print("ckpt_keys:", state_dict)
+
     for name, module in model.named_modules():
         if hasattr(module, 'lora'):
             lora_state = {k.replace(f'{name}.lora.', ''): v for k, v in state_dict.items() if f'{name}.lora.' in k}

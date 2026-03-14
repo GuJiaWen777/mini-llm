@@ -342,7 +342,7 @@ class  MiniLLMBlock(nn.Module):
         self.num_attention_heads = config.num_attention_heads
         self.hidden_size = config.hidden_size
         self.head_dim = config.hidden_size // config.num_attention_heads
-        self.self_attention = Attention(config)
+        self.self_attn = Attention(config)
 
         self.layer_id = layer_id
         self.input_layernorm = RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
@@ -365,7 +365,7 @@ class  MiniLLMBlock(nn.Module):
     ):
         res = hidden_states
 
-        hidden_states, present_key_value = self.self_attention(
+        hidden_states, present_key_value = self.self_attn(
             self.input_layernorm(hidden_states),  # pre-norm
             position_embeddings,
             past_key_value,

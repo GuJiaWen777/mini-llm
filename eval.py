@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TextStreamer
 from model.model_MiniLLM import MiniLLMConfig, MiniLLMForCausalLM
-# from model.model_lora import apply_lora, load_lora
+from model.model_lora import apply_lora, load_lora
 from trainer.trainer_utils import setup_seed
 
 warnings.filterwarnings("ignore")
@@ -24,8 +24,15 @@ def init_model(args):
                 inference_rope_scaling=args.inference_rope_scaling,
             )
         )
+        
         moe_suffix = "_moe" if hasattr(args, "use_moe") and args.use_moe else ""
         ckp = f"./{args.save_dir}/{args.weight}_{args.hidden_size}{moe_suffix}.pth"
+        # model_keys = model.state_dict().keys()
+        # ckpt_keys = torch.load(ckp, map_location=args.device).keys()
+        # print("model_keys:", model_keys)
+        # print("ckpt_keys:", ckpt_keys)
+        # print("Missing:", set(model_keys) - set(ckpt_keys))
+        # print("Unexpected:", set(ckpt_keys) - set(model_keys))
         model.load_state_dict(
             torch.load(ckp, map_location=args.device), strict=True
         )  # ！修正：原strict=False会静默忽略丢失/多余的权重键
